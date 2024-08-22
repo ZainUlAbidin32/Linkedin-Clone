@@ -4,6 +4,7 @@ import { useState } from 'react'
 import {auth} from './firebase'
 import { useDispatch } from 'react-redux'
 import { login } from '../features/userSlice'
+import { getAuth, signInWithEmailAndPassword , createUserWithEmailAndPassword , updateProfile } from 'firebase/auth'
 
 function Login() {
   const [name,setName]=useState("")
@@ -13,8 +14,8 @@ function Login() {
   const dispatch=useDispatch()
 
     const loginApp =(e)=>{
-      e.preventDefault()
-      auth.signInWithEmailAndPassword(email,password).then((authUser)=>{
+      e.preventDefault();
+      signInWithEmailAndPassword(auth,email,password).then((authUser)=>{
         dispatch(login({
           email:authUser.user.email,
           uid:authUser.user.uid,
@@ -27,9 +28,9 @@ function Login() {
       if(!name){
         alert("Please Enter UserName")
       }
-      auth.createUserWithEmailAndPassword(email,password)
+      createUserWithEmailAndPassword(auth,email,password)
       .then(authUser=>{
-        authUser.user.updateProfile({
+        updateProfile(authUser.user,{
           displayName:name,
           photoURL:profilePic,
         }).then(()=>{
